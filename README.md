@@ -33,3 +33,15 @@ SCARD waitlist            # how many
 SMEMBERS waitlist         # the emails
 HGETALL waitlist:meta     # signup time and language per email
 ```
+
+## Sharing and discovery
+
+- `og.png` (1200x630) and `apple-touch-icon.png` are rendered from `design/og.html` and `favicon.svg`
+  with `node design/render.cjs` (needs Playwright).
+- `index.html` carries Open Graph and Twitter tags plus JSON-LD (`WebSite`, `WebPage`, `FAQPage`).
+  The FAQ JSON-LD mirrors the visible FAQ; keep the two in sync.
+- `robots.txt`, `sitemap.xml` and `llms.txt` are served from the root.
+- `?lang=fr` opens the page in French.
+
+The site URL is hardcoded as `https://krafttax.vercel.app`. If the real domain differs,
+replace it in `index.html`, `robots.txt`, `sitemap.xml` and `llms.txt`.

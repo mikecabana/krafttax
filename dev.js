@@ -35,6 +35,12 @@ http.createServer(async (req, res) => {
     res.json = (o) => { res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(o)); };
     return handler(req, res);
   }
-  res.setHeader('Content-Type', 'text/html; charset=utf-8');
-  res.end(await readFile(new URL('./index.html', import.meta.url)));
+  const types = { html: 'text/html; charset=utf-8', png: 'image/png', svg: 'image/svg+xml', txt: 'text/plain; charset=utf-8', xml: 'application/xml' };
+  const name = new URL(req.url, 'http://x').pathname.slice(1) || 'index.html';
+  if (!/^[\w-]+\.(html|png|svg|txt|xml)$/.test(name)) { res.statusCode = 404; return res.end('Not found'); }
+  try {
+    const file = await readFile(new URL(`./${name}`, import.meta.url));
+    res.setHeader('Content-Type', types[name.split('.').pop()]);
+    res.end(file);
+  } catch { res.statusCode = 404; res.end('Not found'); }
 }).listen(PORT, () => console.log(`http://localhost:${PORT}`));

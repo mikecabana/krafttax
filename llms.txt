@@ -1,0 +1,35 @@
+# Kraft Tax
+
+> A wait list asking one question: "Would you pay to send a box of Kraft Dinner to Soraya Martinez Ferrada?" If enough people sign up, an app will be built that lets anyone pay to mail a box of Kraft Dinner to the office of the mayor of Montreal.
+
+- Status: wait list only. The app does not exist yet and no payments are taken.
+- Signing up: enter an email address at https://krafttax.vercel.app/. It is free.
+- Recipient: the office of the mayor of Montreal (Cabinet de la mairesse), 275 Notre-Dame Street East, Montréal, Québec.
+- Languages: English and French (https://krafttax.vercel.app/?lang=fr).
+- Independent project, not affiliated with Kraft Heinz, the Ville de Montréal, or the mayor's office.
+
+## FAQ
+
+### What is this?
+
+A wait list for an app that would let anyone pay to have a box of Kraft Dinner delivered to the office of the mayor of Montreal, Soraya Martinez Ferrada. The app does not exist yet. This page measures whether enough people want it.
+
+### Do I pay anything now?
+
+No. Joining the wait list is free and only takes an email address. No payment details are collected.
+
+### How much will a box cost?
+
+The price is not set yet. It will cover the box, postage to Montreal city hall, and handling. People on the wait list will hear the price first.
+
+### What happens with my email?
+
+It is used for one thing: to tell you if the app launches. It is not sold or shared.
+
+### Is this affiliated with Kraft Heinz or the City of Montreal?
+
+No. This is an independent project. It is not affiliated with, sponsored by, or endorsed by Kraft Heinz, the Ville de Montréal, or the mayor's office.
+
+## Links
+
+- [Wait list](https://krafttax.vercel.app/): the sign-up page
