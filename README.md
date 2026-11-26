@@ -20,11 +20,11 @@ npm run dev   # http://localhost:3000
 Signups are submitted to a Google Form, which writes them to a Google Sheet.
 Visitors never see the form itself.
 
-1. Create a Google Form with two short-answer questions: "Email" and "Language".
+1. Create a Google Form with three short-answer questions: "Email", "Language" and "Price".
 2. Responses > Link to Sheets, and pick the sheet.
 3. Settings: do not require sign-in, do not limit to one response.
 4. In `index.html`, set `FORM_URL` to `https://docs.google.com/forms/d/e/<form id>/formResponse`
-   and `FIELD_EMAIL` / `FIELD_LANG` to the questions' `entry.<number>` names
+   and `FIELD_EMAIL` / `FIELD_LANG` / `FIELD_PRICE` to the questions' `entry.<number>` names
    (visible in the form's public page source, or via "Get pre-filled link").
 
 Google returns nothing readable to the page, so duplicates are not detected:

@@ -192,7 +192,8 @@
   h1 .who { display: block; color: #fff; text-shadow: 0 3px 0 #b9c9ee, 0 8px 0 rgba(0,0,0,.28); }
   .lede { font-size: clamp(1.05rem, 2vw, 1.3rem); line-height: 1.45; max-width: 34em; margin: 0 0 26px; color: #e6eeff; }
 
-  form { background: var(--cream); border-radius: 26px; padding: 10px; display: flex; gap: 10px; max-width: 560px;
+  form { max-width: 560px; }
+  .row { background: var(--cream); border-radius: 26px; padding: 10px; display: flex; gap: 10px;
     box-shadow: 0 8px 0 rgba(0,0,0,.28); }
   input[type=email] { flex: 1; min-width: 0; font: inherit; font-size: 1.1rem; color: var(--ink); background: transparent;
     border: 0; padding: 12px 14px; border-radius: 18px; outline-offset: 2px; }
@@ -205,6 +206,17 @@
   button.go[disabled] { opacity: .6; cursor: progress; }
   :focus-visible { outline: 3px solid var(--red); }
   .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+  fieldset.price { border: 0; padding: 0; margin: 0 0 18px; }
+  .price legend { padding: 0; margin: 0 4px 10px; font-weight: 600; font-size: 1.1rem; }
+  .price legend small { font-weight: 400; font-size: .9rem; color: #b9c9ee; }
+  .pills { display: flex; flex-wrap: wrap; gap: 8px; }
+  .pills label { position: relative; cursor: pointer; }
+  .pills input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+  .pills span { display: block; min-width: 64px; text-align: center; font-weight: 700; font-size: 1.05rem;
+    padding: 9px 14px; border-radius: 999px; background: rgba(255,255,255,.14); border: 2px solid rgba(255,255,255,.35); }
+  .pills input:checked + span { background: var(--cheese); border-color: var(--cheese); color: var(--ink);
+    box-shadow: 0 3px 0 var(--cheese-deep); }
+  .pills input:focus-visible + span { outline: 3px solid var(--red); outline-offset: 2px; }
   .msg { min-height: 1.6em; margin: 16px 4px 0; font-weight: 600; font-size: 1.05rem; }
   .msg.ok { color: var(--yolk); }
   .msg.err { color: #ffc2cc; }
@@ -229,7 +241,9 @@
     main { grid-template-columns: 1fr; gap: 28px; padding-top: 12px; }
     .stage { order: -1; }
     .box { width: 170px; }
-    form { flex-direction: column; border-radius: 22px; }
+    .row { flex-direction: column; border-radius: 22px; }
+    .pills { gap: 6px; }
+    .pills span { min-width: 0; padding: 9px 11px; font-size: 1rem; }
     .noodles .m-hide { display: none; }
     .noodles svg { opacity: .55; }
     button.go { width: 100%; }
@@ -272,10 +286,22 @@
     <p class="lede" data-i18n="lede">One click, one box of mac &amp; cheese, delivered straight to the office of the mayor of Montreal. If enough people say yes, we build it. Drop your email to be counted.</p>
 
     <form id="f" novalidate>
-      <label class="hp" aria-hidden="true">Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
-      <input type="email" name="email" id="email" required autocomplete="email" inputmode="email"
-             placeholder="you@example.com" aria-label="Email" data-i18n-aria="emailLabel">
-      <button class="go" type="submit" data-i18n="cta">Yes, I'd pay</button>
+      <fieldset class="price">
+        <legend><span data-i18n="priceQ">How much would you pay per box, delivered?</span> <small data-i18n="optional">(optional)</small></legend>
+        <div class="pills">
+          <label><input type="radio" name="price" value="10"><span data-amt="10">$10</span></label>
+          <label><input type="radio" name="price" value="15"><span data-amt="15">$15</span></label>
+          <label><input type="radio" name="price" value="20"><span data-amt="20">$20</span></label>
+          <label><input type="radio" name="price" value="25"><span data-amt="25">$25</span></label>
+          <label><input type="radio" name="price" value="30+"><span data-amt="30+">$30+</span></label>
+        </div>
+      </fieldset>
+      <div class="row">
+        <label class="hp" aria-hidden="true">Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+        <input type="email" name="email" id="email" required autocomplete="email" inputmode="email"
+               placeholder="you@example.com" aria-label="Email" data-i18n-aria="emailLabel">
+        <button class="go" type="submit" data-i18n="cta">Yes, I'd pay</button>
+      </div>
     </form>
     <p class="msg" id="msg" role="status" aria-live="polite"></p>
     <p class="fine" data-i18n="fine">No payment now. One email when we launch, nothing else.</p>
@@ -323,6 +349,9 @@ const T = {
     qmark: "?",
     lede: "One click, one box of mac & cheese, delivered straight to the office of the mayor of Montreal. If enough people say yes, we build it. Drop your email to be counted.",
     cta: "Yes, I'd pay",
+    priceQ: "How much would you pay per box, delivered?",
+    optional: "(optional)",
+    amt: v => "$" + v,
     emailLabel: "Email",
     fine: "No payment now. One email when we launch, nothing else.",
     disclaimer: "Independent project. Not affiliated with, sponsored by, or endorsed by Kraft Heinz, the Ville de Montréal, or the mayor's office. Kraft Dinner is a trademark of its owner. Your email is used only to tell you if this launches.",
@@ -349,6 +378,9 @@ const T = {
     qmark: " ?",
     lede: "Un clic, une boîte de macaroni au fromage, livrée directement au cabinet de la mairesse de Montréal. Si assez de gens disent oui, on le construit. Laissez votre courriel pour être compté.",
     cta: "Oui, je paierais",
+    priceQ: "Combien paieriez-vous par boîte, livraison incluse ?",
+    optional: "(facultatif)",
+    amt: v => v + " $",
     emailLabel: "Courriel",
     fine: "Aucun paiement maintenant. Un seul courriel au lancement, rien d'autre.",
     disclaimer: "Projet indépendant. Aucun lien avec Kraft Heinz, la Ville de Montréal ou le cabinet de la mairesse, ni commandite ou approbation de leur part. Kraft Dinner est une marque de commerce de son propriétaire. Votre courriel sert uniquement à vous aviser du lancement.",
@@ -392,6 +424,7 @@ function setLang(l) {
   document.documentElement.lang = l;
   document.title = T[l].title;
   document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = T[l][el.dataset.i18n]; });
+  document.querySelectorAll("[data-amt]").forEach(el => { el.textContent = T[l].amt(el.dataset.amt); });
   document.querySelectorAll("[data-i18n-aria]").forEach(el => { el.setAttribute("aria-label", T[l][el.dataset.i18nAria]); });
   document.querySelectorAll(".lang button").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang === l));
   if (lastMsg) showMsg(...lastMsg);
@@ -404,6 +437,7 @@ setLang(lang);
 const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLScLnSxTjcJnDs1eCRCmexmAgNT1jWEHA7rbbvKtAkmFcX13mw/formResponse";
 const FIELD_EMAIL = "entry.1011825296";
 const FIELD_LANG = "entry.1747180789";
+const FIELD_PRICE = "entry.1324987455";
 
 const form = document.getElementById("f");
 form.addEventListener("submit", async e => {
@@ -420,7 +454,7 @@ form.addEventListener("submit", async e => {
       await fetch(FORM_URL, {
         method: "POST",
         mode: "no-cors",
-        body: new URLSearchParams({ [FIELD_EMAIL]: email, [FIELD_LANG]: lang })
+        body: new URLSearchParams({ [FIELD_EMAIL]: email, [FIELD_LANG]: lang, [FIELD_PRICE]: form.price.value })
       });
     }
     showMsg("ok", null, "ok");
