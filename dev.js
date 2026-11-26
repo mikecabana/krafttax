@@ -19,7 +19,7 @@ http.createServer(async (req, res) => {
   if (!/^[\w-]+\.(html|png|svg|txt|xml)$/.test(name)) { res.statusCode = 404; return res.end('Not found'); }
   try {
     let file = await readFile(new URL(`./${name}`, import.meta.url));
-    if (name === 'index.html') file = file.toString().replace('PASTE_GOOGLE_FORM_RESPONSE_URL_HERE', '/__form');
+    if (name === 'index.html') file = file.toString().replace(/const FORM_URL = "[^"]*"/, 'const FORM_URL = "/__form"');
     res.setHeader('Content-Type', types[name.split('.').pop()]);
     res.end(file);
   } catch { res.statusCode = 404; res.end('Not found'); }
