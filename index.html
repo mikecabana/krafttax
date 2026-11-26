@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Would you pay to send a box of Kraft Dinner to the mayor?</title>
+<meta name="description" content="Join the wait list. If enough people say yes, we'll build the app that mails a box of Kraft Dinner to the office of the mayor of Montreal.">
+<meta property="og:title" content="Would you pay to send a box of Kraft Dinner to Soraya Martinez Ferrada?">
+<meta property="og:description" content="Join the wait list. Enough yeses and we build it.">
+<meta name="theme-color" content="#0a3d9c">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230a3d9c'/%3E%3Cpath d='M16 26a16 16 0 0 0 32 0' fill='none' stroke='%23ffb612' stroke-width='11' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #0a3d9c;
+    --blue-deep: #062a70;
+    --blue-bright: #1456c8;
+    --cheese: #ffb612;
+    --cheese-deep: #f08a00;
+    --yolk: #ffd65a;
+    --red: #e4002b;
+    --cream: #fff8e6;
+    --ink: #06215a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    min-height: 100vh;
+    font-family: "Fredoka", "Arial Rounded MT Bold", "Trebuchet MS", system-ui, sans-serif;
+    color: #fff;
+    background:
+      radial-gradient(ellipse 90% 60% at 50% 0%, var(--blue-bright) 0%, transparent 70%),
+      linear-gradient(var(--blue), var(--blue-deep));
+    background-color: var(--blue);
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* scattered noodles */
+  .noodles { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+  .noodles svg { position: absolute; width: var(--s, 90px); height: auto; opacity: .9;
+    transform: rotate(var(--r, 0deg)); animation: bob 7s ease-in-out infinite; animation-delay: var(--d, 0s); }
+  @keyframes bob { 50% { translate: 0 -12px; rotate: 6deg; } }
+  @media (prefers-reduced-motion: reduce) { .noodles svg, .box { animation: none !important; } }
+
+  header { position: relative; z-index: 2; display: flex; justify-content: flex-end; padding: 16px 20px 0; }
+  .lang { display: inline-flex; background: rgba(255,255,255,.14); border-radius: 999px; padding: 4px; }
+  .lang button { font: inherit; font-weight: 600; font-size: 14px; color: #fff; background: none; border: 0;
+    padding: 6px 14px; border-radius: 999px; cursor: pointer; }
+  .lang button[aria-pressed="true"] { background: var(--cheese); color: var(--ink); }
+
+  main { position: relative; z-index: 1; flex: 1; width: 100%; max-width: 1080px; margin: 0 auto;
+    padding: 24px 20px 48px; display: grid; grid-template-columns: 1.25fr .75fr; gap: 40px; align-items: center; }
+
+  .badge { display: inline-block; background: var(--red); color: #fff; font-weight: 700; font-size: 14px;
+    letter-spacing: .08em; text-transform: uppercase; padding: 7px 16px; border-radius: 999px;
+    transform: rotate(-3deg); box-shadow: 0 4px 0 rgba(0,0,0,.25); }
+  h1 { margin: 22px 0 18px; font-weight: 700; font-style: italic; line-height: 1.02;
+    font-size: clamp(2.3rem, 6.2vw, 4.4rem); color: var(--cheese);
+    text-shadow: 0 3px 0 var(--cheese-deep), 0 8px 0 rgba(0,0,0,.28); text-wrap: balance; }
+  h1 .who { display: block; color: #fff; text-shadow: 0 3px 0 #b9c9ee, 0 8px 0 rgba(0,0,0,.28); }
+  .lede { font-size: clamp(1.05rem, 2vw, 1.3rem); line-height: 1.45; max-width: 34em; margin: 0 0 26px; color: #e6eeff; }
+
+  form { background: var(--cream); border-radius: 26px; padding: 10px; display: flex; gap: 10px; max-width: 560px;
+    box-shadow: 0 8px 0 rgba(0,0,0,.28); }
+  input[type=email] { flex: 1; min-width: 0; font: inherit; font-size: 1.1rem; color: var(--ink); background: transparent;
+    border: 0; padding: 12px 14px; border-radius: 18px; outline-offset: 2px; }
+  input[type=email]::placeholder { color: #7d8bb0; }
+  button.go { font: inherit; font-weight: 700; font-size: 1.1rem; color: var(--ink); background: var(--cheese);
+    border: 0; border-radius: 18px; padding: 12px 22px; cursor: pointer; white-space: nowrap;
+    box-shadow: 0 4px 0 var(--cheese-deep); transition: transform .08s, box-shadow .08s; }
+  button.go:hover { background: var(--yolk); }
+  button.go:active { transform: translateY(4px); box-shadow: none; }
+  button.go[disabled] { opacity: .6; cursor: progress; }
+  :focus-visible { outline: 3px solid var(--red); }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+  .msg { min-height: 1.6em; margin: 16px 4px 0; font-weight: 600; font-size: 1.05rem; }
+  .msg.ok { color: var(--yolk); }
+  .msg.err { color: #ffc2cc; }
+  .fine { margin: 6px 4px 0; font-size: .92rem; color: #b9c9ee; }
+
+  /* the box */
+  .stage { display: grid; place-items: center; }
+  .box { width: min(100%, 300px); transform: rotate(6deg); filter: drop-shadow(0 22px 18px rgba(0,0,0,.4));
+    animation: wobble 5s ease-in-out infinite; }
+  @keyframes wobble { 50% { transform: rotate(3deg) translateY(-10px); } }
+
+  footer { position: relative; z-index: 1; text-align: center; font-size: .82rem; line-height: 1.5; color: #9fb3e3;
+    padding: 0 20px 24px; max-width: 760px; margin: 0 auto; }
+
+  @media (max-width: 800px) {
+    main { grid-template-columns: 1fr; gap: 28px; padding-top: 12px; }
+    .stage { order: -1; }
+    .box { width: 170px; }
+    form { flex-direction: column; border-radius: 22px; }
+    .noodles .m-hide { display: none; }
+    .noodles svg { opacity: .55; }
+    button.go { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="elbow" viewBox="0 0 100 70">
+    <path d="M16 18a34 34 0 0 0 68 0" fill="none" stroke="#f08a00" stroke-width="27" stroke-linecap="round"/>
+    <path d="M16 16a34 34 0 0 0 68 0" fill="none" stroke="#ffb612" stroke-width="22" stroke-linecap="round"/>
+    <path d="M13 13a37 37 0 0 0 20 32" fill="none" stroke="#ffd65a" stroke-width="5" stroke-linecap="round"/>
+  </symbol>
+</svg>
+
+<div class="noodles" aria-hidden="true">
+  <svg style="left:-1%;top:9%;--r:-25deg;--s:84px"><use href="#elbow"/></svg>
+  <svg style="left:44%;top:5%;--r:160deg;--s:60px;--d:-2s"><use href="#elbow"/></svg>
+  <svg style="right:5%;top:16%;--r:40deg;--s:100px;--d:-4s"><use href="#elbow"/></svg>
+  <svg class="m-hide" style="left:1%;bottom:3%;--r:110deg;--s:110px;--d:-1s"><use href="#elbow"/></svg>
+  <svg class="m-hide" style="left:60%;bottom:2%;--r:-70deg;--s:70px;--d:-3s"><use href="#elbow"/></svg>
+  <svg style="right:8%;bottom:20%;--r:200deg;--s:86px;--d:-5s"><use href="#elbow"/></svg>
+</div>
+
+<header>
+  <div class="lang" role="group" aria-label="Language / Langue">
+    <button type="button" data-lang="en" aria-pressed="true">EN</button>
+    <button type="button" data-lang="fr" aria-pressed="false">FR</button>
+  </div>
+</header>
+
+<main>
+  <section>
+    <span class="badge" data-i18n="badge">Wait list</span>
+    <h1>
+      <span data-i18n="q1">Would you pay to send a box of Kraft Dinner to</span>
+      <span class="who">Soraya Martinez Ferrada<span data-i18n="qmark">?</span></span>
+    </h1>
+    <p class="lede" data-i18n="lede">One click, one box of mac &amp; cheese, delivered straight to the office of the mayor of Montreal. If enough people say yes, we build it. Drop your email to be counted.</p>
+
+    <form id="f" novalidate>
+      <label class="hp" aria-hidden="true">Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+      <input type="email" name="email" id="email" required autocomplete="email" inputmode="email"
+             placeholder="you@example.com" aria-label="Email" data-i18n-aria="emailLabel">
+      <button class="go" type="submit" data-i18n="cta">Yes, I'd pay</button>
+    </form>
+    <p class="msg" id="msg" role="status" aria-live="polite"></p>
+    <p class="fine" data-i18n="fine">No payment now. One email when we launch, nothing else.</p>
+  </section>
+
+  <div class="stage" aria-hidden="true">
+    <svg class="box" viewBox="0 0 300 420">
+      <rect x="6" y="6" width="288" height="408" rx="14" fill="#0a3d9c" stroke="#062a70" stroke-width="6"/>
+      <rect x="6" y="6" width="288" height="86" rx="14" fill="#1456c8"/>
+      <rect x="6" y="70" width="288" height="22" fill="#1456c8"/>
+      <text x="150" y="62" text-anchor="middle" font-family="Fredoka, Arial Rounded MT Bold, sans-serif" font-weight="700" font-style="italic" font-size="34" fill="#ffb612">Pour la mairesse</text>
+      <path d="M78 150a72 72 0 0 0 144 0" fill="none" stroke="#f08a00" stroke-width="56" stroke-linecap="round"/>
+      <path d="M78 145a72 72 0 0 0 144 0" fill="none" stroke="#ffb612" stroke-width="48" stroke-linecap="round"/>
+      <path d="M70 140a80 80 0 0 0 40 68" fill="none" stroke="#ffd65a" stroke-width="10" stroke-linecap="round"/>
+      <g transform="rotate(-4 150 340)">
+        <rect x="36" y="292" width="228" height="96" rx="8" fill="#fff8e6" stroke="#06215a" stroke-width="3"/>
+        <text font-family="ui-monospace, Menlo, Consolas, monospace" fill="#06215a" font-size="13">
+          <tspan x="50" y="316" font-weight="700" font-size="11" fill="#e4002b">TO / À :</tspan>
+          <tspan x="50" y="336" font-weight="700">Cabinet de la mairesse</tspan>
+          <tspan x="50" y="354">275, rue Notre-Dame Est</tspan>
+          <tspan x="50" y="372">Montréal (Québec)</tspan>
+        </text>
+      </g>
+    </svg>
+  </div>
+</main>
+
+<footer data-i18n="disclaimer">Independent project. Not affiliated with, sponsored by, or endorsed by Kraft Heinz, the Ville de Montréal, or the mayor's office. Kraft Dinner is a trademark of its owner. Your email is used only to tell you if this launches.</footer>
+
+<script>
+const T = {
+  en: {
+    title: "Would you pay to send a box of Kraft Dinner to the mayor?",
+    badge: "Wait list",
+    q1: "Would you pay to send a box of Kraft Dinner to",
+    qmark: "?",
+    lede: "One click, one box of mac & cheese, delivered straight to the office of the mayor of Montreal. If enough people say yes, we build it. Drop your email to be counted.",
+    cta: "Yes, I'd pay",
+    emailLabel: "Email",
+    fine: "No payment now. One email when we launch, nothing else.",
+    disclaimer: "Independent project. Not affiliated with, sponsored by, or endorsed by Kraft Heinz, the Ville de Montréal, or the mayor's office. Kraft Dinner is a trademark of its owner. Your email is used only to tell you if this launches.",
+    sending: "Sending…",
+    ok: n => n ? `You're in. You are yes #${n}.` : "You're in. We'll email you when it's time.",
+    already: "You're already on the list. One box per person, for now.",
+    invalid: "That email doesn't look right. Try again?",
+    error: "Something went wrong on our end. Please try again in a minute."
+  },
+  fr: {
+    title: "Paieriez-vous pour envoyer une boîte de Kraft Dinner à la mairesse ?",
+    badge: "Liste d'attente",
+    q1: "Paieriez-vous pour envoyer une boîte de Kraft Dinner à",
+    qmark: " ?",
+    lede: "Un clic, une boîte de macaroni au fromage, livrée directement au cabinet de la mairesse de Montréal. Si assez de gens disent oui, on le construit. Laissez votre courriel pour être compté.",
+    cta: "Oui, je paierais",
+    emailLabel: "Courriel",
+    fine: "Aucun paiement maintenant. Un seul courriel au lancement, rien d'autre.",
+    disclaimer: "Projet indépendant. Aucun lien avec Kraft Heinz, la Ville de Montréal ou le cabinet de la mairesse, ni commandite ou approbation de leur part. Kraft Dinner est une marque de commerce de son propriétaire. Votre courriel sert uniquement à vous aviser du lancement.",
+    sending: "Envoi…",
+    ok: n => n ? `C'est noté. Vous êtes le oui no ${n}.` : "C'est noté. On vous écrit le moment venu.",
+    already: "Vous êtes déjà sur la liste. Une boîte par personne, pour l'instant.",
+    invalid: "Ce courriel semble invalide. On réessaie ?",
+    error: "Quelque chose a mal tourné de notre côté. Réessayez dans une minute."
+  }
+};
+
+let lang = "en";
+try { lang = localStorage.getItem("lang") || ((navigator.language || "").toLowerCase().startsWith("fr") ? "fr" : "en"); } catch {}
+if (!T[lang]) lang = "en";
+
+const msg = document.getElementById("msg");
+let lastMsg = null; // [key, arg, cls]
+
+function showMsg(key, arg, cls) {
+  lastMsg = key ? [key, arg, cls] : null;
+  const v = key ? T[lang][key] : "";
+  msg.textContent = typeof v === "function" ? v(arg) : v;
+  msg.className = "msg" + (cls ? " " + cls : "");
+}
+
+function setLang(l) {
+  lang = l;
+  document.documentElement.lang = l;
+  document.title = T[l].title;
+  document.querySelectorAll("[data-i18n]").forEach(el => { el.textContent = T[l][el.dataset.i18n]; });
+  document.querySelectorAll("[data-i18n-aria]").forEach(el => { el.setAttribute("aria-label", T[l][el.dataset.i18nAria]); });
+  document.querySelectorAll(".lang button").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang === l));
+  if (lastMsg) showMsg(...lastMsg);
+  try { localStorage.setItem("lang", l); } catch {}
+}
+document.querySelectorAll(".lang button").forEach(b => b.addEventListener("click", () => setLang(b.dataset.lang)));
+setLang(lang);
+
+const form = document.getElementById("f");
+form.addEventListener("submit", async e => {
+  e.preventDefault();
+  const input = form.email, btn = form.querySelector("button.go");
+  const email = input.value.trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { showMsg("invalid", null, "err"); input.focus(); return; }
+  btn.disabled = true;
+  showMsg("sending");
+  try {
+    const r = await fetch("/api/waitlist", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, lang, website: form.website.value })
+    });
+    const data = await r.json().catch(() => ({}));
+    if (r.ok && data.ok) {
+      if (data.already) showMsg("already", null, "ok");
+      else { showMsg("ok", data.count, "ok"); form.reset(); }
+    } else if (r.status === 400) showMsg("invalid", null, "err");
+    else showMsg("error", null, "err");
+  } catch { showMsg("error", null, "err"); }
+  btn.disabled = false;
+});
+</script>
+</body>
+</html>
