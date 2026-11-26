@@ -7,8 +7,7 @@ If enough people sign up, the full app gets built.
 ## What's here
 
 - `index.html`: the whole page (inline CSS and JS, EN/FR toggle). No backend.
-- `apps-script/Code.gs`: Google Apps Script that appends each signup to a Google Sheet.
-- `dev.js`: local preview server with a fake in-memory list.
+- `dev.js`: local preview server that logs signups to the console.
 
 ## Run locally
 
@@ -16,18 +15,20 @@ If enough people sign up, the full app gets built.
 npm run dev   # http://localhost:3000
 ```
 
-## Connect the Google Sheet
+## Connect the Google Form
 
-1. Create a Google Sheet. Open Extensions > Apps Script.
-2. Replace the editor contents with `apps-script/Code.gs` and save.
-3. Deploy > New deployment > type "Web app". Set "Execute as" to **Me** and
-   "Who has access" to **Anyone**. Authorize when asked.
-4. Copy the web app URL (it ends in `/exec`) and paste it into `index.html` in place of
-   `PASTE_APPS_SCRIPT_URL_HERE`.
+Signups are submitted to a Google Form, which writes them to a Google Sheet.
+Visitors never see the form itself.
 
-Signups land in the first tab as rows: timestamp, email, language. Duplicates are skipped.
-If you edit the script later, publish it with Deploy > Manage deployments > edit > New version;
-the URL stays the same.
+1. Create a Google Form with two short-answer questions: "Email" and "Language".
+2. Responses > Link to Sheets, and pick the sheet.
+3. Settings: do not require sign-in, do not limit to one response.
+4. In `index.html`, set `FORM_URL` to `https://docs.google.com/forms/d/e/<form id>/formResponse`
+   and `FIELD_EMAIL` / `FIELD_LANG` to the questions' `entry.<number>` names
+   (visible in the form's public page source, or via "Get pre-filled link").
+
+Google returns nothing readable to the page, so duplicates are not detected:
+de-duplicate in the sheet when counting.
 
 ## Deploy
 

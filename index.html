@@ -339,7 +339,6 @@ const T = {
     fa4: "No. This is an independent project. It is not affiliated with, sponsored by, or endorsed by Kraft Heinz, the Ville de Montréal, or the mayor's office.",
     sending: "Sending…",
     ok: n => n ? `You're in. You are yes #${n}.` : "You're in. We'll email you when it's time.",
-    already: "You're already on the list. One box per person, for now.",
     invalid: "That email doesn't look right. Try again?",
     error: "Something went wrong on our end. Please try again in a minute."
   },
@@ -366,7 +365,6 @@ const T = {
     fa4: "Non. C'est un projet indépendant, sans lien avec Kraft Heinz, la Ville de Montréal ou le cabinet de la mairesse, ni commandite ou approbation de leur part.",
     sending: "Envoi…",
     ok: n => n ? `C'est noté. Vous êtes le oui no ${n}.` : "C'est noté. On vous écrit le moment venu.",
-    already: "Vous êtes déjà sur la liste. Une boîte par personne, pour l'instant.",
     invalid: "Ce courriel semble invalide. On réessaie ?",
     error: "Quelque chose a mal tourné de notre côté. Réessayez dans une minute."
   }
@@ -402,8 +400,10 @@ function setLang(l) {
 document.querySelectorAll(".lang button").forEach(b => b.addEventListener("click", () => setLang(b.dataset.lang)));
 setLang(lang);
 
-// Google Apps Script web app URL (ends in /exec). See README.
-const WAITLIST_URL = "PASTE_APPS_SCRIPT_URL_HERE";
+// Google Form that feeds the signup sheet. See README.
+const FORM_URL = "PASTE_GOOGLE_FORM_RESPONSE_URL_HERE"; // https://docs.google.com/forms/d/e/<id>/formResponse
+const FIELD_EMAIL = "entry.EMAIL_ID";
+const FIELD_LANG = "entry.LANG_ID";
 
 const form = document.getElementById("f");
 form.addEventListener("submit", async e => {
@@ -414,18 +414,17 @@ form.addEventListener("submit", async e => {
   btn.disabled = true;
   showMsg("sending");
   try {
-    // text/plain keeps this a "simple" request, which Apps Script web apps require (no CORS preflight).
-    const r = await fetch(WAITLIST_URL, {
-      method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify({ email, lang, website: form.website.value })
-    });
-    const data = await r.json().catch(() => ({}));
-    if (r.ok && data.ok) {
-      if (data.already) showMsg("already", null, "ok");
-      else { showMsg("ok", data.count, "ok"); form.reset(); }
-    } else if (data.error === "invalid_email") showMsg("invalid", null, "err");
-    else showMsg("error", null, "err");
+    if (!/^(https:|\/)/.test(FORM_URL)) throw new Error("FORM_URL is not set");
+    if (!form.website.value) { // honeypot: skip the send for bots, but look successful
+      // Google Forms sends no CORS headers, so the reply is opaque: a resolved fetch is all we can know.
+      await fetch(FORM_URL, {
+        method: "POST",
+        mode: "no-cors",
+        body: new URLSearchParams({ [FIELD_EMAIL]: email, [FIELD_LANG]: lang })
+      });
+    }
+    showMsg("ok", null, "ok");
+    form.reset();
   } catch { showMsg("error", null, "err"); }
   btn.disabled = false;
 });
