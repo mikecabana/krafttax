@@ -217,6 +217,7 @@
   .pills input:checked + span { background: var(--cheese); border-color: var(--cheese); color: var(--ink);
     box-shadow: 0 3px 0 var(--cheese-deep); }
   .pills input:focus-visible + span { outline: 3px solid var(--red); outline-offset: 2px; }
+  .price .incl { margin: 10px 4px 0; font-size: .85rem; color: #b9c9ee; }
   .msg { min-height: 1.6em; margin: 16px 4px 0; font-weight: 600; font-size: 1.05rem; }
   .msg.ok { color: var(--yolk); }
   .msg.err { color: #ffc2cc; }
@@ -287,14 +288,15 @@
 
     <form id="f" novalidate>
       <fieldset class="price">
-        <legend><span data-i18n="priceQ">How much would you pay per box, delivered?</span> <small data-i18n="optional">(optional)</small></legend>
+        <legend><span data-i18n="priceQ">How much would you pay per box?</span> <small data-i18n="optional">(optional)</small></legend>
         <div class="pills">
+          <label><input type="radio" name="price" value="5"><span data-amt="5">$5</span></label>
           <label><input type="radio" name="price" value="10"><span data-amt="10">$10</span></label>
           <label><input type="radio" name="price" value="15"><span data-amt="15">$15</span></label>
           <label><input type="radio" name="price" value="20"><span data-amt="20">$20</span></label>
-          <label><input type="radio" name="price" value="25"><span data-amt="25">$25</span></label>
-          <label><input type="radio" name="price" value="30+"><span data-amt="30+">$30+</span></label>
+          <label><input type="radio" name="price" value="25+"><span data-amt="25+">$25+</span></label>
         </div>
+        <p class="incl" data-i18n="incl">Price includes the box and shipping to city hall.</p>
       </fieldset>
       <div class="row">
         <label class="hp" aria-hidden="true">Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
@@ -349,7 +351,8 @@ const T = {
     qmark: "?",
     lede: "One click, one box of mac & cheese, delivered straight to the office of the mayor of Montreal. If enough people say yes, we build it. Drop your email to be counted.",
     cta: "Yes, I'd pay",
-    priceQ: "How much would you pay per box, delivered?",
+    priceQ: "How much would you pay per box?",
+    incl: "Price includes the box and shipping to city hall.",
     optional: "(optional)",
     amt: v => "$" + v,
     emailLabel: "Email",
@@ -378,7 +381,8 @@ const T = {
     qmark: " ?",
     lede: "Un clic, une boîte de macaroni au fromage, livrée directement au cabinet de la mairesse de Montréal. Si assez de gens disent oui, on le construit. Laissez votre courriel pour être compté.",
     cta: "Oui, je paierais",
-    priceQ: "Combien paieriez-vous par boîte, livraison incluse ?",
+    priceQ: "Combien paieriez-vous par boîte ?",
+    incl: "Le prix comprend la boîte et la livraison à l'hôtel de ville.",
     optional: "(facultatif)",
     amt: v => v + " $",
     emailLabel: "Courriel",
