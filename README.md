@@ -6,9 +6,9 @@ If enough people sign up, the full app gets built.
 
 ## What's here
 
-- `index.html`: the whole page (inline CSS and JS, EN/FR toggle).
-- `api/waitlist.js`: serverless function that stores emails in a Redis set.
-- `dev.js`: local preview server with a fake in-memory store.
+- `index.html`: the whole page (inline CSS and JS, EN/FR toggle). No backend.
+- `apps-script/Code.gs`: Google Apps Script that appends each signup to a Google Sheet.
+- `dev.js`: local preview server with a fake in-memory list.
 
 ## Run locally
 
@@ -16,23 +16,23 @@ If enough people sign up, the full app gets built.
 npm run dev   # http://localhost:3000
 ```
 
-## Deploy (Vercel)
+## Connect the Google Sheet
 
-1. Import the repo into Vercel. No build step or framework preset is needed.
-2. Add an Upstash Redis store from the Vercel Marketplace and connect it to the project.
-   This sets `KV_REST_API_URL` and `KV_REST_API_TOKEN`
-   (`UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` also work).
-3. Deploy.
+1. Create a Google Sheet. Open Extensions > Apps Script.
+2. Replace the editor contents with `apps-script/Code.gs` and save.
+3. Deploy > New deployment > type "Web app". Set "Execute as" to **Me** and
+   "Who has access" to **Anyone**. Authorize when asked.
+4. Copy the web app URL (it ends in `/exec`) and paste it into `index.html` in place of
+   `PASTE_APPS_SCRIPT_URL_HERE`.
 
-## Reading the list
+Signups land in the first tab as rows: timestamp, email, language. Duplicates are skipped.
+If you edit the script later, publish it with Deploy > Manage deployments > edit > New version;
+the URL stays the same.
 
-In the Upstash console or CLI:
+## Deploy
 
-```
-SCARD waitlist            # how many
-SMEMBERS waitlist         # the emails
-HGETALL waitlist:meta     # signup time and language per email
-```
+It is a static site: any host works (Cloudflare Pages, Vercel, GitHub Pages).
+No build command; the output directory is the repo root.
 
 ## Sharing and discovery
 

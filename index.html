@@ -402,6 +402,9 @@ function setLang(l) {
 document.querySelectorAll(".lang button").forEach(b => b.addEventListener("click", () => setLang(b.dataset.lang)));
 setLang(lang);
 
+// Google Apps Script web app URL (ends in /exec). See README.
+const WAITLIST_URL = "PASTE_APPS_SCRIPT_URL_HERE";
+
 const form = document.getElementById("f");
 form.addEventListener("submit", async e => {
   e.preventDefault();
@@ -411,16 +414,17 @@ form.addEventListener("submit", async e => {
   btn.disabled = true;
   showMsg("sending");
   try {
-    const r = await fetch("/api/waitlist", {
+    // text/plain keeps this a "simple" request, which Apps Script web apps require (no CORS preflight).
+    const r = await fetch(WAITLIST_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify({ email, lang, website: form.website.value })
     });
     const data = await r.json().catch(() => ({}));
     if (r.ok && data.ok) {
       if (data.already) showMsg("already", null, "ok");
       else { showMsg("ok", data.count, "ok"); form.reset(); }
-    } else if (r.status === 400) showMsg("invalid", null, "err");
+    } else if (data.error === "invalid_email") showMsg("invalid", null, "err");
     else showMsg("error", null, "err");
   } catch { showMsg("error", null, "err"); }
   btn.disabled = false;
